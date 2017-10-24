@@ -1,2 +1,2 @@
-Name,Gender,DOB;
-Todd Flanagan,M,10/14/1993;
+Name,Gender,DOB,NumberOfMeds;
+Todd Flanagan,M,10/14/1993,2;
