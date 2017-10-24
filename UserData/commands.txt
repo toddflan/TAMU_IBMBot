@@ -1,0 +1,1 @@
+curl -X POST -d @msg_test.txt -H "Content-type: text/plain" http://localhost:1880/reminder
