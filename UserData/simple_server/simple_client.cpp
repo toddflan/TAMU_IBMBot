@@ -1,8 +1,115 @@
 //
-//
+// echo program client
 //
 
-#include "simple_server_functions.h"
+//----------------------------------------------------------------------------------
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <errno.h>					// defines perror(), herror() 
+#include <fcntl.h>					// set socket to non-blocking with fcntrl()
+#include <unistd.h>
+#include <string.h>
+#include <assert.h>					//add diagnostics to a program
+
+#include <netinet/in.h>			//defines in_addr and sockaddr_in structures
+#include <arpa/inet.h>			//external definitions for inet functions
+#include <netdb.h>					//getaddrinfo() & gethostbyname()
+
+#include <sys/socket.h>			//
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <sys/uio.h>
+#include <sys/wait.h>
+#include <sys/select.h>			// for select() system call only
+#include <sys/time.h>				// time() & clock_gettime()
+
+#define MAX_BUFF_SIZE 25		// max length
+
+//----------------------------------------------------------------------------------
+
+// function for writing errors to terminal
+
+void err_sys(const char* x)
+{
+	perror(x);
+	exit(1);
+}
+
+//----------------------------------------------------------------------------------
+
+// writen function to write to server
+
+int writen(int sock, char* buff, int length)
+{
+	int write_num = 0;
+	int bytes_written = 0;
+	
+	while (bytes_written < length)			// loop write until done
+	{
+		write_num = write(sock, buff + bytes_written, length - bytes_written);
+		
+		if (write_num == 0)		// if nothing to write, end loop
+		{
+			break;
+		}
+		else if (write_num == -1)
+		{
+			if (errno != EINTR)
+			{
+				return -1;			// error
+			}
+			
+			bytes_written = 0;				// start while loop over if EINTR
+		}
+		
+		bytes_written += write_num;
+	}
+	
+	return bytes_written;
+}
+
+//----------------------------------------------------------------------------------
+
+// readline function for getting txt from server
+
+int readline(int sock, char* buff, int length)
+{
+	int bytes_read = 0;
+	int read_num = 0;
+	bool found_newline = false;
+		
+	read_num = read(sock, buff + bytes_read, length - bytes_read);
+
+	if (read_num == -1)
+	{
+		if (errno != EINTR)
+		{
+			return -1;			// error
+		}
+			
+		bytes_read = 0;			// restart loop if EINTR
+	}
+		
+	bytes_read += read_num;
+	
+	for (int i = 0; i < bytes_read; i++)
+	{
+		if (buff[i] == '\n')						// check buffer for newline
+		{
+			buff[i+1] = '\0';
+			found_newline = true;
+			i = bytes_read;				// exit loop
+		}
+	}
+	
+	if (!found_newline)								// EOF check
+	{
+		buff[length-1] = '\0';
+	}
+
+	return bytes_read;
+}
 
 //----------------------------------------------------------------------------------
 
