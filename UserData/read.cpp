@@ -70,7 +70,7 @@ int main(int argc, char* argv[])
 
 	input_file >> skipws;		// back to default
 
-	cout << '\n';
+	//cout << '\n';		// commented out for adding to cron
 
 	return 0;
 }
