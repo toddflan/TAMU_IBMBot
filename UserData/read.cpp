@@ -3,6 +3,7 @@
 
 using namespace std;
 
+// ./read <Column> <filename>
 int main(int argc, char* argv[])
 {
 	ifstream input_file;
