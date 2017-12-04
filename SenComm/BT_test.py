@@ -11,8 +11,17 @@ def getAccel(num):
 # Serial connection
 ser = serial.Serial('/dev/rfcomm0', 115200)
 
+#time = []	# for plotting
+#mags = []
+
+start = 0
+iter = 0
+
+file_out = open('mag_data.txt', 'w')	# File to write mag data
+file_out.write('Time,Magnitude\n')
+
 # Get data
-while True:
+while iter < 10000:
 	result = ord(ser.read())
 	if result == 0x55:		# Code before data
 		data = []
@@ -29,7 +38,21 @@ while True:
 			a_z = getAccel(a_z)
 
 			vect_mag = math.sqrt(a_x**2 + a_y**2 + a_z**2)
-			if vect_mag > 2:
-				print vect_mag
+
+			file_out.write('%d,%f\n' % (start, vect_mag))	# write data to file
+
+			#mags.append(vect_mag)
+			#time.append(start)
+			start = start + 1
+
+			iter = iter + 1
+
+			#if vect_mag > 2:
+			#	print vect_mag
 
 			#print a_x, a_y, a_z
+
+#plt.plot(time, mags)
+#plt.draw()
+
+file_out.close()	# make sure to close
