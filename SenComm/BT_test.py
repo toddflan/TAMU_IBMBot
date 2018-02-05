@@ -18,6 +18,8 @@ above_count = 0
 file_out = open('mag_data.txt', 'w')	# File to write mag data
 file_out.write('Time,Magnitude\n')
 
+fall_msg_sent = 0	# to not overload node red with messages
+
 # Get data
 while iter < 5000:
 	result = ord(ser.read())
@@ -43,6 +45,12 @@ while iter < 5000:
 				above_count = 0
 
 			if above_count > 2:		# Gets rid of bad spikes
+				if fall_msg_sent == 0:
+					file_falls_out = open('falls.txt', 'w')         # File to log falls
+					file_falls_out.write('FALL!!!')
+                                	file_falls_out.close()
+					fall_msg_sent = 1	# don't send another
+
 				print 'FALL!!!!!'	# Alert!!!
 				above_count = 0		# reset count
 
@@ -55,6 +63,7 @@ while iter < 5000:
 
 			if iter % 100 == 0:
 				print iter
+				fall_msg_sent = 0	# reset it
 
 			#print a_x, a_y, a_z
 
