@@ -1,5 +1,6 @@
 import serial
 import math
+from twilio.rest import Client		# to send texts (for now)
 
 # Function for decoding accelerometer data
 def getAccel(num):
@@ -15,8 +16,16 @@ iter = 0
 threshold = 2.0		# Fall detection
 above_count = 0
 
+has_fallen = 0		# need to trigger get help text
+
 file_out = open('mag_data.txt', 'w')	# File to write mag data
 file_out.write('Time,Magnitude\n')
+
+# credentials
+acct_sid = "ACbe73c35f1e1483a0a3c53fcc9dc815ad"
+token = "f88deacaa9f98732c4d66a977996bd34"
+
+client = Client(acct_sid, token)
 
 fall_msg_sent = 0	# to not overload node red with messages
 
@@ -52,9 +61,20 @@ while iter < 5000:
 					fall_msg_sent = 1	# don't send another
 
 				print 'FALL!!!!!'	# Alert!!!
+				has_fallen = 1		# triggers get help text **********
 				above_count = 0		# reset count
 
 			file_out.write('%d,%f\n' % (iter, vect_mag))	# write data to file
+
+			if has_fallen == 1:	# Get help text **********
+				# Send "get help!" text
+				response = client.messages.create(
+					to = "+15129471505",
+					from_ = "+15124569474",
+					body = "Help! I've fallen and I can't get up!"
+					)
+				has_fallen = 0		# reset control for text
+
 
 			#mags.append(vect_mag)
 			#time.append(start)
