@@ -22,8 +22,7 @@ file_out = open('mag_data.txt', 'w')	# File to write mag data
 file_out.write('Time,Magnitude\n')
 
 # credentials
-acct_sid = "ACbe73c35f1e1483a0a3c53fcc9dc815ad"
-token = "f88deacaa9f98732c4d66a977996bd34"
+------------------
 
 client = Client(acct_sid, token)
 
@@ -69,8 +68,8 @@ while iter < 5000:
 			if has_fallen == 1:	# Get help text **********
 				# Send "get help!" text
 				response = client.messages.create(
-					to = "+15129471505",
-					from_ = "+15124569474",
+					to = "-------",
+					from_ = "--------",
 					body = "Help! I've fallen and I can't get up!"
 					)
 				has_fallen = 0		# reset control for text
