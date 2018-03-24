@@ -1,2 +1,0 @@
-Name;Day;Hour;Minute.
-The Good Stuff;1,3,5;23;10.

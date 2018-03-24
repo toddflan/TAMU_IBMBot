@@ -1,2 +1,0 @@
-Name,Day,Hour,Minute,Dose,Directions,Desc;
-Lasix,MWF,1,20,100mg,Take with water only,Loop diuretic used for treating high blood pressure or water retention;

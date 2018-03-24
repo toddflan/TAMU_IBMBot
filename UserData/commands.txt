@@ -1,5 +1,0 @@
-curl -X POST -d @msg_test.txt -H "Content-type: text/plain" http://localhost:1880/reminder
-
-sudo tail -f /var/mail/pi
-
-grep CRON /var/log/syslog

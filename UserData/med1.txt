@@ -1,2 +1,0 @@
-Name,Day,Hour,Minute,Dose,Directions,Desc;
-Zo-loft,TR,7,29,500mg,Take with breakfast,Antidepressant - used for treating depression or OCD;
