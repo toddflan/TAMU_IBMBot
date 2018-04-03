@@ -46,8 +46,8 @@ pwd = ""
 recvd_data = client.recv(100)		# 100 should be plent for wifi name, pwd
 ssid, pwd = recvd_data.split(",", 1)	# split the string at ','
 
-print ssid	# testing************************************************************
-print pwd
+#print ssid	# testing************************************************************
+#print pwd
 
 #-----------------------------------------------------------
 
@@ -84,6 +84,7 @@ s.connect(("8.8.8.8", 80))
 my_ip = s.getsockname()[0]	# save ip
 s.close()	# close socket
 
+print my_ip		# print IP so server can use it later
 client.send(my_ip)	# send IP to app
 
 #-----------------------------------------------------------
