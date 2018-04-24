@@ -6,7 +6,9 @@
 
 import bluetooth	# communication with app
 import socket
+import wifi
 from wifi import Cell, Scheme	# to connect wifi
+import subprocess
 
 #-----------------------------------------------------------
 
@@ -47,8 +49,9 @@ pwd = ""
 #---Connect to wifi-----------------------------------------
 
 wifi_is_found = 0	# boolean for finding wifi
+good_password = 0	# boolean for correct password
 
-while (wifi_is_found == 0):
+while (wifi_is_found == 0 or good_password == 0):
 	# Get wifi creds over BT
 	recvd_data = client.recv(100)		# 100 should be plenty for wifi name, pwd
 	ssid, pwd = recvd_data.split(",", 1)	# split the string at ','
@@ -68,7 +71,16 @@ while (wifi_is_found == 0):
 		print cell		# connect to wifi network
 		scheme = Scheme.for_cell('wlan0', 'home', cell, pwd)
 		scheme.save()
-		scheme.activate()
+
+		try:
+			scheme.activate()
+			good_password = 1
+		except wifi.exceptions.ConnectionError:
+			client.send("Error: bad password")
+			good_password = 0
+		# Clean up interfaces file
+		subprocess.call('head -20 /etc/network/interfaces > /home/pi/Desktop/TAMU_IBMBot/tmp_interfaces.txt', shell=True)
+		subprocess.call('cp /home/pi/Desktop/TAMU_IBMBot/tmp_interfaces.txt /etc/network/interfaces', shell=True)
 
 #-----------------------------------------------------------
 
