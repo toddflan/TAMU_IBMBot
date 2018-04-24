@@ -1,2 +1,2 @@
 Name;Day;Hour;Minute.
-Zoloft;1,2;21;45.
+Drugs;1;0;48.

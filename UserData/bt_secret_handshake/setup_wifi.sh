@@ -10,7 +10,7 @@ sudo python internet.py
 sleep 10
 
 # Speak intro
-#curl -X POST -d "Thanks for connecting me to the internet! I'm your IBM Senior Assistant, but you can call me TJ." -H "Content-type: text/plain" http://localhost:1880/reminder
+curl -X POST -d "Thanks for connecting me to the internet! I'm your IBM Senior Assistant, but you can call me TJ." -H "Content-type: text/plain" http://localhost:1880/reminder
 
 # Wait for intro to finish
-#sleep 20
+sleep 20

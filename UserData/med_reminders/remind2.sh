@@ -2,7 +2,7 @@
 
 # Script to remind user.
 
-dir="/home/pi/Desktop/TAMU_IBMBot/UserData/test/"
+dir="/home/pi/Desktop/TAMU_IBMBot/UserData/med_reminders/"
 
 # Triggers bot to say reminder message
 # Runs in correct directory, needed because cron runs in $home

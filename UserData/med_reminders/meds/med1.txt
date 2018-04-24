@@ -1,2 +1,2 @@
 Name;Day;Hour;Minute.
-Lasix;2;2;5.
+Lasix;2;17;27.

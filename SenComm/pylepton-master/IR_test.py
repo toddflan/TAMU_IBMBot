@@ -1,5 +1,6 @@
 import sys
 import serial
+import subprocess    # to call scripts
 import time
 import cmd
 import numpy as np
@@ -49,7 +50,7 @@ if __name__ == '__main__':
   iteration = 0
   old1 = 0
   old2 = 0
-  
+  turns = 0
 
   while True:
     # Capture the raw image
@@ -59,11 +60,18 @@ if __name__ == '__main__':
       for j in range(len(rawIm[i])):
         if rawIm[i][j] > 7900:
           count += 1
-    print("Count: ", count)
-    if count < 50:
-      #old1 = 1
-      print("There aint nobody home")
+    if count < 175:
+      if turns < 30:
+        print("There aint nobody home")
+        turns = turns + 1
+        if ser.isOpen():
+          val = 81
+          ser.write(str(unichr(val)))
+      else:  # alert user we lost them
+        subprocess.call("./lost_user.sh", shell=True)
+        turns = 0
     else:
+      turns = 0 
       cv2.normalize(rawIm, rawIm, 0, 65535, cv2.NORM_MINMAX)
       rawImage = cv2.convertScaleAbs(rawIm, alpha = 255.0/65535.0)
       
@@ -96,7 +104,7 @@ if __name__ == '__main__':
         iteration = 1
       else:
         ema = movingaverage(ema, cX)
-        #print("cX = ", cX, ", EMA = ", ema)
+        print("cX = ", cX, ", EMA = ", ema)
         old2 = old1
         old1 = cX
       ################################
@@ -113,7 +121,8 @@ if __name__ == '__main__':
       cv2.circle(rawImage, (cX, cY), 3, (255,0,0), -1)
       cv2.rectangle(rawImage, (x,y), (x+w, y+h), (255,0,0), 2)
 
-      cv2.imshow('image', rawImage)
+#      cv2.imshow('image', rawImage)
+      cv2.imwrite("yunowork.jpeg", rawImage)
 
       # Wait key
       key = cv2.waitKey(1) & 0xFF      

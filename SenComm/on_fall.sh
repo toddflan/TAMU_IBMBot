@@ -1,11 +1,13 @@
 #!/bin/bash
 
-# Upon filechange, generate message and add command to cron daemon
+# Message to user
+curl -X POST -d "I've detected a fall. Would you like me to get help?" -H "Content-type: text/plain" http://tjSA:1880/reminder
 
-file="falls.txt"
+# Start conversation
+curl -X POST -d "start" -H "Content-type: text/plain" http://localhost:1880/fallconf &
 
-while true
-do
-	inotifywait -e modify $file
-	curl -X POST -d "I've detected a fall. Would you like me to get help?" -H "Content-type: text/plain" http://tjSA:1880/reminder
-done
+# Wait
+sleep 10
+
+# Stop conversation
+curl -X POST -d "stop" -H "Content-type: text/plain" http://localhost:1880/fallconf &
