@@ -28,7 +28,7 @@ server.listen(1)
 my_uuid = "00001101-0000-1000-8000-00805F9B34FB"
 
 # Let app know we're ready to party
-bluetooth.advertise_service( server, "tjSA",
+bluetooth.advertise_service( server, "David",
 	service_id = my_uuid,
 	service_classes = [ my_uuid, bluetooth.SERIAL_PORT_CLASS ],
 	profiles = [ bluetooth.SERIAL_PORT_PROFILE ]
@@ -42,34 +42,33 @@ print "Accepted connection from ", address
 ssid = ""
 pwd = ""
 
-# Get wifi creds over BT
-recvd_data = client.recv(100)		# 100 should be plent for wifi name, pwd
-ssid, pwd = recvd_data.split(",", 1)	# split the string at ','
-
-#print ssid	# testing************************************************************
-#print pwd
-
 #-----------------------------------------------------------
 
 #---Connect to wifi-----------------------------------------
 
-cell_list = Cell.all('wlan0')	# gets list of networks
-
 wifi_is_found = 0	# boolean for finding wifi
 
-for cell in cell_list:		# find right one
-	if cell.ssid == ssid:
-		wifi_is_found = 1		# found it
-		break
+while (wifi_is_found == 0):
+	# Get wifi creds over BT
+	recvd_data = client.recv(100)		# 100 should be plenty for wifi name, pwd
+	ssid, pwd = recvd_data.split(",", 1)	# split the string at ','
 
-if wifi_is_found != 1:
-	print "Wifi not found"
-	#error!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-else:
-	print cell		# connect to wifi network
-	scheme = Scheme.for_cell('wlan0', 'home', cell, pwd)
-	scheme.save()
-	scheme.activate()
+	print ssid, pwd		# testing **************************
+
+	cell_list = Cell.all('wlan0')	# gets list of networks
+
+	for cell in cell_list:		# find right one
+		if cell.ssid == ssid:
+			wifi_is_found = 1		# found it
+			break
+
+	if wifi_is_found != 1:
+		client.send("Error: wifi not found")	# send error, retry sending creds
+	else:
+		print cell		# connect to wifi network
+		scheme = Scheme.for_cell('wlan0', 'home', cell, pwd)
+		scheme.save()
+		scheme.activate()
 
 #-----------------------------------------------------------
 
