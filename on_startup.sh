@@ -25,10 +25,6 @@ curl -X POST -d "Thanks for connecting me to the internet! I'm your IBM Senior A
 # Wait for intro to finish
 sleep 10
 
-# Clean /etc/network/interfaces file
-head -20 /etc/network/interfaces > /home/pi/Desktop/TAMU_IBMBot/tmp_interfaces.txt
-cp /home/pi/Desktop/TAMU_IBMBot/tmp_interfaces.txt /etc/network/interfaces
-
 # MEDICATION REMINDERS ***************************
 curl -X POST -d "Starting medication reminder server." -H "Content-type: text/plain" http://localhost:1880/reminder
 
@@ -63,4 +59,4 @@ sleep 5
 curl -X POST -d "Starting following code." -H "Content-type: text/plain" http://localhost:1880/reminder
 
 # Switch user to pi (not root) and start following code
-sudo -u pi -H bash -c "cd $ir_dir; source /home/pi/.profile; workon cv3; python IR_test.py"
+sudo -u pi -H bash -c "cd $ir_dir; source /home/pi/.profile; workon cv3; python IR_test_contour.py"
